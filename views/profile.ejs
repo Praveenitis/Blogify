@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="<%= locals.user.profileImageUrl %>" type="image/x-icon">
-    <title><%= locals.user.fullName %>'s Profile</title>
+    <title><%= (locals.user && locals.user.fullName) ? (locals.user.fullName + "'s Profile") : 'Profile - Blogify' %></title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.0.1/dist/full.css" rel="stylesheet" />
@@ -18,10 +18,10 @@
             <!-- User Image -->
             <img src="<%= locals.user.profileImageUrl %>" alt="User Image" class="w-32 h-32 rounded-full object-cover mb-4">
             <!-- User Name -->
-            <h1 class="text-2xl font-semibold text-gray-800"><%= locals.user.name %></h1>
+            <h1 class="text-2xl font-semibold text-gray-800"><%= locals.user.fullName %></h1>
             <!-- Additional User Info -->
             <p class="text-gray-600 mt-2">Email: <%= locals.user.email %></p>
-            <p class="text-gray-600">Bio: I am a cool developer <%= locals.user.bio %></p>
+            <p class="text-gray-600">Bio: <%= locals.user.bio || 'No bio yet.' %></p>
         </div>
 
         <!-- User Blogs Section -->
@@ -48,4 +48,6 @@
     </div>
 </div>
 </body>
+<%- include('./partials/footer') %>
+</html>
 </html>

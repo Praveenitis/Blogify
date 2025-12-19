@@ -1,3 +1,24 @@
+<nav class="w-full bg-base-100 border-b">
+  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center space-x-3">
+      <img src="/images/logo.png" onerror="this.style.display='none'" alt="Blogify" class="h-8 w-8 rounded-full">
+      <span class="font-bold text-lg">Blogify</span>
+    </a>
+
+    <div class="flex items-center space-x-4">
+      <a href="/" class="text-sm hover:underline">Home</a>
+      <a href="/blogs" class="text-sm hover:underline">Create</a>
+      <% if (locals.user) { %>
+        <a href="/profile" class="text-sm hover:underline">Profile</a>
+        <a href="/logout" class="btn btn-ghost btn-sm">Sign Out</a>
+        <img src="<%= locals.user.profileImageUrl %>" alt="avatar" class="h-8 w-8 rounded-full border ml-2"/>
+      <% } else { %>
+        <a href="/signin" class="btn btn-sm">Sign In</a>
+        <a href="/signup" class="btn btn-primary btn-sm">Sign Up</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
 <div class="navbar bg-base-100">
   <div class="flex-1">
     <a href="/" class="btn btn-ghost normal-case text-xl">BLOGIFY</a>
