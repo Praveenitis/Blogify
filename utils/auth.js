@@ -1,17 +1,16 @@
 const jwt = require('jsonwebtoken');
-const secret = "#elloWorLd";
+
+const secret = process.env.JWT_SECRET || '#elloWorLd';
+const expiresIn = process.env.JWT_EXPIRES_IN || '1d';
 
 function createTokenForUser(user){
     const payload = {
-        _id:user._id,
-        fullName:user.fullName,
-        email:user.email,
-        profileImageUrl:user.profileImageUrl,
-        role:user.role,
+        _id: user._id,
+        role: user.role,
     };
 
-    const token = jwt.sign(payload, secret);
-    return token; 
+    const token = jwt.sign(payload, secret, { expiresIn });
+    return token;
 }
 
 function validateToken(token){
@@ -19,4 +18,4 @@ function validateToken(token){
     return payload;
 }
 
-module.exports = {createTokenForUser , validateToken};
+module.exports = {createTokenForUser, validateToken};

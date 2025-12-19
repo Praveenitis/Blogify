@@ -11,48 +11,42 @@ app.use(express.urlencoded({ extended: true }));
 
 const renderBlogPage = (req , res)=>{
     const user = req.user;
-    res.render("createBlog" , {user:user});
+    return res.render("createBlog" , {user:user});
 } 
 
 const postBlogHandler = asyncHandler(async(req, res)=>{
     const {title , body} = req.body;
-    let coverImageURL = `./images/uploads/${req.file.filename}`;
-    
+    let coverImageURL = null;
 
     try {
-        const fileResponse = await uploadOnCloudinary(req.file.buffer, req.file.originalname);
+        if (req.file && req.file.buffer) {
+            const fileResponse = await uploadOnCloudinary(req.file.buffer, req.file.originalname);
+            coverImageURL = fileResponse && fileResponse.url;
+            console.log("CoverImage Url value is : " , coverImageURL);
+        }
 
-        coverImageURL = fileResponse.url;
-        console.log("CoverImage Url value is : " , coverImageURL);
-        
         const newBlog = await blogModel.create({
-            title:title,
-            body:body,
-            coverImageURL:coverImageURL,
-            createdBy:req.user._id,
-        }) 
+            title: title,
+            body: body,
+            coverImageURL: coverImageURL,
+            createdBy: req.user._id,
+        });
 
+        return res.redirect("/");
     } catch (error) {
-        console.log("Some error happend on our side: ");
-        
+        console.log("Some error happened on our side:", error);
+        return res.status(500).render('404');
     }
-    
-
-    
-    res.redirect("/");
 })
 
 const renderSinglePageBlog = asyncHandler(async(req, res)=>{
     const id = req.params.id;
-
     try {
-        const blogData = await blogModel.find({_id:id});
-        console.log(blogData);
-        
-        if(!blogData) res.send("404");
-        res.render("blog" , {blog:blogData[0]});
+        const blogData = await blogModel.findById(id);
+        if(!blogData) return res.status(404).render("404");
+        return res.render("blog", {blog: blogData});
     } catch (error) {
-        res.render("404");
+        return res.status(404).render("404");
     }
         
 })
