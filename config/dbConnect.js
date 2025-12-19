@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
-require("dotenv").config();
-const url = process.env.MONGO_DB_URL;
+require('dotenv').config();
 
-const connectDB = async()=>{
+const url = process.env.MONGO_DB_URL || 'mongodb://127.0.0.1:27017/blogify';
+
+const connectDB = async () => {
     try {
-        const connect = await mongoose.connect(url);
-        console.log("Successfully Connected to MONGODB");
-        
+        mongoose.set('strictQuery', false);
+        await mongoose.connect(url);
+        console.log('Successfully Connected to MONGODB');
     } catch (error) {
-        console.log("Failed connecting to database");
-        console.log("With error" , error);
+        console.error('Failed connecting to database', error);
+        throw error;
     }
-}
+};
 
 module.exports = connectDB;

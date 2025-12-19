@@ -17,14 +17,18 @@ const cookieOptions = {
 // GET : http://localhost:3000/
 const renderHomePage = async(req, res)=>{
 
-    // const data= validateToken();
     const token = req.cookies.authToken;
-    if(!token) return res.render("signin" , {error:"You're not logged in, kindly login"});
-    console.log("Token is present*");
-    
-    const userData = validateToken(token);
+    let userData = null;
+    if (token) {
+        try {
+            userData = validateToken(token);
+        } catch (err) {
+            userData = null;
+        }
+    }
+
     const blogsData = await blogModel.find({});
-    res.render("home" , {user:userData , blogs:blogsData});
+    return res.render("home", { user: userData, blogs: blogsData });
 }
 
 // render Signup Page

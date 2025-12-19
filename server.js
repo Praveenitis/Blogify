@@ -8,8 +8,19 @@ const auth = require("./middleware/auth.js");
 const { log } = require('util');
 require("dotenv").config();
 
-// Database connection
-connectDB();
+// Database connection (wait before starting the server)
+
+async function start() {
+    try {
+        await connectDB();
+        app.listen(PORT, ()=> console.log(`Server started at http://localhost:${PORT}`));
+    } catch (err) {
+        console.error('Server startup failed due to DB connection error. Exiting.');
+        process.exit(1);
+    }
+}
+
+start();
 
 // Ejs and View engine setup
 app.set("view engine", "ejs");
@@ -39,5 +50,4 @@ app.use((req, res) => {
 })
 
 
-// Port
-app.listen(PORT, ()=> console.log("Server started at http://localhost:3000"));
+// Port (server started in start())
